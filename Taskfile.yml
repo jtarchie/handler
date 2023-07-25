@@ -1,0 +1,25 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+    - go build ./...
+    - task: wasm
+  wasm:
+    sources:
+    - examples/**/main.go
+    cmds:
+    - for: sources
+      cmd: tinygo build -o {{ .ITEM | replace "go" "wasm" }} -target=wasi --no-debug -gc=leaking -opt=2 {{ .ITEM }}
+  generate: go generate ./...
+  lint:
+    cmds:
+    - gofmt -w .
+    - golangci-lint run --fix --timeout "10m"
+    - deno fmt README.md
+  default:
+    cmds:
+    - task: generate
+    - task: lint
+    - task: build
+    - go run main.go --port 8080
