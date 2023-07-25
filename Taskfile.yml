@@ -10,7 +10,7 @@ tasks:
     - examples/**/main.go
     cmds:
     - for: sources
-      cmd: tinygo build -o {{ .ITEM | replace "go" "wasm" }} -target=wasi --no-debug -gc=leaking -opt=2 {{ .ITEM }}
+      cmd: tinygo build -o {{ .ITEM | replace "go" "wasm" }} -scheduler=none -target=wasi --no-debug -gc=leaking -opt=2 {{ .ITEM }}
   generate: go generate ./...
   lint:
     cmds:
